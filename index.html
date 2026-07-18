@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Encuestas · Tareas escolares — IED Los Rosales</title>
+<meta name="description" content="Consulta institucional anónima sobre tareas escolares. IED Los Rosales." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --ink:#0B1220; --ink2:#0E1626; --surface:#111C2E; --surface2:#0F1826;
+  --line:#22314B; --line2:#2E4062;
+  --text:#E7EEF7; --muted:#9DB0C7; --faint:#6B7F9C;
+  --teal:#2DD4BF; --teal-deep:#0F766E; --teal-soft:#0d3b38;
+  --amber:#FBBF24; --violet:#A78BFA; --danger:#F87171;
+  --accent:var(--teal); --accent-soft:rgba(45,212,191,.14); --accent-line:rgba(45,212,191,.35);
+  --r:14px; --maxw:760px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(45,212,191,.10), transparent 60%),
+    radial-gradient(900px 500px at -10% 20%, rgba(167,139,250,.08), transparent 55%),
+    var(--ink);
+  color:var(--text); font-family:"Inter",system-ui,sans-serif; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+body[data-role="docentes"]{--accent:var(--teal);--accent-soft:rgba(45,212,191,.14);--accent-line:rgba(45,212,191,.4)}
+body[data-role="familias"]{--accent:var(--amber);--accent-soft:rgba(251,191,36,.13);--accent-line:rgba(251,191,36,.4)}
+body[data-role="estudiantes"]{--accent:var(--violet);--accent-soft:rgba(167,139,250,.14);--accent-line:rgba(167,139,250,.4)}
+
+.wrap{max-width:var(--maxw); margin:0 auto; padding:28px 20px 80px}
+.eyebrow{font-family:"Space Mono",monospace; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin:0 0 10px}
+a{color:var(--accent)}
+
+/* ---------- top bar ---------- */
+.topbar{display:flex; align-items:center; gap:12px; max-width:var(--maxw); margin:0 auto; padding:18px 20px 4px}
+.crest{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+  background:linear-gradient(145deg,var(--teal-deep),#0b4f4a); color:#eafffb; font-family:"Space Grotesk";font-weight:700;font-size:15px;
+  box-shadow:0 0 0 1px var(--line) inset}
+.brand{font-family:"Space Grotesk";font-weight:600;font-size:14px;letter-spacing:.02em}
+.brand small{display:block;color:var(--faint);font-weight:400;font-size:11.5px;letter-spacing:.02em}
+
+/* ---------- landing ---------- */
+.hero h1{font-family:"Space Grotesk"; font-weight:700; font-size:clamp(30px,6vw,46px); line-height:1.05; margin:6px 0 14px; letter-spacing:-.01em}
+.hero h1 em{font-style:normal; color:var(--teal)}
+.hero p.lead{color:var(--muted); font-size:16px; max-width:56ch; margin:0 0 8px}
+.chip{display:inline-flex;align-items:center;gap:8px;font-family:"Space Mono",monospace;font-size:11.5px;letter-spacing:.06em;
+  color:var(--muted); background:var(--surface2); border:1px solid var(--line); padding:7px 12px; border-radius:999px; margin-top:16px}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 10px var(--teal)}
+
+.roles{display:grid; gap:14px; margin-top:30px}
+@media(min-width:640px){.roles{grid-template-columns:1fr 1fr 1fr}}
+.role{position:relative; text-align:left; cursor:pointer; border:1px solid var(--line); background:linear-gradient(180deg,var(--surface),var(--surface2));
+  border-radius:var(--r); padding:20px 18px 18px; color:var(--text); font:inherit; transition:.18s ease; overflow:hidden}
+.role:hover{transform:translateY(-3px); border-color:var(--rc)}
+.role:focus-visible{outline:2px solid var(--rc); outline-offset:3px}
+.role .num{font-family:"Space Mono";font-size:11px;color:var(--faint);letter-spacing:.1em}
+.role .ic{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;margin:6px 0 14px;background:var(--rc-soft);border:1px solid var(--rc-line)}
+.role .ic svg{width:21px;height:21px;stroke:var(--rc);fill:none;stroke-width:1.8}
+.role h3{font-family:"Space Grotesk";font-weight:600;font-size:19px;margin:0 0 4px}
+.role p{color:var(--muted);font-size:13.5px;margin:0 0 14px;min-height:38px}
+.role .go{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:var(--rc)}
+.role .go svg{width:15px;height:15px;stroke:var(--rc);fill:none;stroke-width:2;transition:.18s}
+.role:hover .go svg{transform:translateX(4px)}
+.role[data-r="docentes"]{--rc:var(--teal);--rc-soft:rgba(45,212,191,.13);--rc-line:rgba(45,212,191,.35)}
+.role[data-r="familias"]{--rc:var(--amber);--rc-soft:rgba(251,191,36,.12);--rc-line:rgba(251,191,36,.35)}
+.role[data-r="estudiantes"]{--rc:var(--violet);--rc-soft:rgba(167,139,250,.14);--rc-line:rgba(167,139,250,.35)}
+
+.privacy{margin-top:30px;border:1px solid var(--line);border-left:3px solid var(--teal-deep);background:var(--surface2);
+  border-radius:10px;padding:14px 16px;color:var(--muted);font-size:12.5px}
+.privacy b{color:var(--text)}
+.foot{margin-top:36px;color:var(--faint);font-size:12px}
+
+/* ---------- form shell ---------- */
+.form-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+.back{background:none;border:1px solid var(--line);color:var(--muted);border-radius:9px;padding:8px 12px;font:inherit;font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.15s}
+.back:hover{color:var(--text);border-color:var(--line2)}
+.back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.role-tag{font-family:"Space Mono";font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent-line);background:var(--accent-soft);padding:6px 11px;border-radius:999px}
+
+.form-title{font-family:"Space Grotesk";font-weight:700;font-size:clamp(22px,4.5vw,30px);margin:14px 0 4px;letter-spacing:-.01em}
+.form-sub{color:var(--muted);font-size:14px;margin:0 0 22px}
+
+/* progress spine */
+.progress{display:flex;gap:6px;margin:0 0 26px}
+.progress .seg{flex:1;height:5px;border-radius:99px;background:var(--line);overflow:hidden}
+.progress .seg .fill{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 55%, #fff 0%));transition:width .35s ease}
+.progress .seg.done .fill{width:100%}
+.progress .seg.active .fill{width:100%}
+.step-label{font-family:"Space Mono";font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:-14px 0 20px}
+.step-label b{color:var(--accent)}
+
+/* questions */
+.step{animation:rise .35s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.q{background:linear-gradient(180deg,var(--surface),var(--surface2));border:1px solid var(--line);border-radius:var(--r);padding:18px 18px 8px;margin-bottom:14px}
+.q > .qh{font-family:"Space Grotesk";font-weight:600;font-size:16px;margin:0 0 3px;color:var(--text)}
+.q .req{color:var(--accent);font-weight:700}
+.q .help{color:var(--faint);font-size:12.5px;margin:0 0 12px}
+.q.err{border-color:var(--danger)}
+.q.err .qh{color:#fca5a5}
+
+.opts{display:grid;gap:9px;margin-top:12px}
+.opt{display:flex;align-items:flex-start;gap:11px;border:1px solid var(--line);background:var(--ink2);border-radius:11px;padding:12px 14px;cursor:pointer;transition:.14s;font-size:14.5px}
+.opt:hover{border-color:var(--line2);background:#111d31}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt .mark{flex:none;width:20px;height:20px;border-radius:6px;border:1.6px solid var(--line2);display:grid;place-items:center;margin-top:1px;transition:.14s}
+.opt[data-single] .mark{border-radius:50%}
+.opt .mark svg{width:12px;height:12px;stroke:#06110f;fill:none;stroke-width:3;opacity:0;transition:.12s}
+.opt.on{border-color:var(--accent-line);background:var(--accent-soft)}
+.opt.on .mark{background:var(--accent);border-color:var(--accent)}
+.opt.on .mark svg{opacity:1}
+.opt .txt{color:var(--text)}
+
+/* likert */
+.likert{margin-top:12px;overflow-x:auto}
+.likert table{width:100%;border-collapse:collapse;min-width:460px}
+.likert th{font-family:"Space Mono";font-size:10.5px;letter-spacing:.03em;color:var(--muted);font-weight:400;text-align:center;padding:0 6px 10px;vertical-align:bottom}
+.likert th.first{text-align:left;width:44%}
+.likert td{padding:9px 6px;border-top:1px solid var(--line)}
+.likert td.stmt{font-size:13.5px;color:var(--text)}
+.likert td.cell{text-align:center}
+.lk{width:22px;height:22px;border-radius:50%;border:1.6px solid var(--line2);display:inline-grid;place-items:center;cursor:pointer;transition:.14s}
+.lk:hover{border-color:var(--accent-line)}
+.lk.on{background:var(--accent);border-color:var(--accent)}
+.lk.on::after{content:"";width:8px;height:8px;border-radius:50%;background:#06110f}
+.likert-mini{display:none}
+
+textarea, input[type=text]{width:100%;background:var(--ink2);border:1px solid var(--line);border-radius:11px;color:var(--text);
+  font:inherit;font-size:14.5px;padding:12px 14px;resize:vertical;margin-top:10px;transition:.14s}
+textarea:focus,input[type=text]:focus{outline:none;border-color:var(--accent-line);box-shadow:0 0 0 3px var(--accent-soft)}
+textarea::placeholder,input::placeholder{color:var(--faint)}
+
+/* nav */
+.nav{display:flex;gap:12px;margin-top:24px}
+.btn{font:inherit;font-weight:600;font-size:14.5px;border-radius:11px;padding:13px 20px;cursor:pointer;border:1px solid transparent;transition:.15s;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.btn.prev{background:transparent;border-color:var(--line);color:var(--muted)}
+.btn.prev:hover{color:var(--text);border-color:var(--line2)}
+.btn.next{background:var(--accent);color:#06110f;flex:1;box-shadow:0 8px 22px -12px var(--accent)}
+.btn.next:hover{filter:brightness(1.06)}
+.btn.next:disabled{opacity:.55;cursor:progress;filter:none}
+.errline{color:var(--danger);font-size:13px;margin-top:12px;display:none}
+.errline.show{display:block}
+
+/* success */
+.done{text-align:center;padding:40px 10px;animation:rise .4s ease both}
+.done .seal{width:78px;height:78px;border-radius:50%;margin:0 auto 22px;display:grid;place-items:center;background:var(--accent-soft);border:1px solid var(--accent-line)}
+.done .seal svg{width:36px;height:36px;stroke:var(--accent);fill:none;stroke-width:2.4}
+.done h2{font-family:"Space Grotesk";font-size:26px;margin:0 0 8px}
+.done p{color:var(--muted);max-width:44ch;margin:0 auto 24px}
+
+@media(max-width:520px){
+  .likert{display:none}
+  .likert-mini{display:block;margin-top:12px}
+  .lm-stmt{font-size:14px;color:var(--text);margin:16px 0 8px}
+  .lm-scale{display:grid;gap:7px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="crest">LR</div>
+  <div class="brand">IED Los Rosales<small>Gestión Académica · Plan de Mejoramiento 2026</small></div>
+</div>
+
+<main class="wrap" id="app"></main>
+
+<script>
+/* ============================================================
+   CONFIG — pega aquí la URL /exec de tu Google Apps Script
+   ============================================================ */
+const CONFIG = {
+  SCRIPT_URL: "PEGA_AQUI_TU_URL_DE_APPS_SCRIPT"
+};
+
+/* ---------- escalas reutilizables ---------- */
+const ACUERDO = ["Totalmente de acuerdo","De acuerdo","En desacuerdo","Totalmente en desacuerdo"];
+
+/* ---------- definición de las tres encuestas ---------- */
+const SURVEYS = {
+  docentes: {
+    title: "Encuesta a Docentes",
+    sub: "Tareas escolares, aprendizaje e integración de la IA",
+    accent: "docentes",
+    sections: [
+      { parte:"Parte 1 · Perfil docente", qs:[
+        {id:"jornada",label:"Jornada",type:"single",required:true,q:"¿En qué jornada labora?",opts:["Mañana","Tarde","Ambas jornadas"]},
+        {id:"nivel",label:"Nivel(es) que enseña",type:"multi",required:true,q:"¿En qué niveles imparte clases?",help:"Marque todos los que apliquen.",opts:["Preescolar","Primaria (1º–3º)","Primaria (4º–5º)","Secundaria (6º–9º)","Media (10º–11º)"]},
+        {id:"area",label:"Área o asignatura",type:"text",required:true,q:"Área o asignatura que enseña",placeholder:"Ej. Matemáticas, Ciencias Naturales…"},
+        {id:"experiencia",label:"Años de experiencia",type:"single",required:true,q:"Años de experiencia docente",opts:["Menos de 5","Entre 5 y 10","Entre 11 y 20","Más de 20"]},
+      ]},
+      { parte:"Parte 2 · Frecuencia y propósito", qs:[
+        {id:"frecuencia",label:"Frecuencia de asignación",type:"single",required:true,q:"¿Con qué frecuencia asigna tareas para realizar en casa?",opts:["Diariamente","2 o 3 veces por semana","Una vez por semana","Rara vez / antes de exámenes"]},
+        {id:"proposito",label:"Propósito principal",type:"multi",max:2,required:true,q:"¿Cuál es el propósito principal de las tareas que asigna?",help:"Seleccione máximo 2 opciones.",opts:["Practicar y reforzar lo visto en clase","Introducir un tema nuevo (aula invertida)","Fomentar el hábito de estudio y la responsabilidad","Terminar el trabajo que no se concluyó en el aula","Evaluar el nivel de comprensión","Desarrollar autonomía, investigación o creación propia"]},
+        {id:"proceso",label:"Diseño de proceso propio",type:"single",required:true,q:"¿Diseña las tareas de modo que exijan proceso o elaboración propia (no solo respuestas reproducibles)?",opts:["Siempre","Frecuentemente","A veces","Rara vez"]},
+      ]},
+      { parte:"Parte 3 · Dosificación y carga", qs:[
+        {id:"tiempo_sesion",label:"Tiempo estimado por sesión",type:"single",required:true,q:"¿Cuánto tiempo debería tomarle a un alumno promedio completar la tarea que asigna por sesión?",opts:["Menos de 15 minutos","Entre 15 y 30 minutos","Entre 30 y 60 minutos","Más de una hora"]},
+        {id:"coordinacion",label:"Coordinación entre docentes",type:"single",required:true,q:"¿Existe coordinación con los demás docentes del mismo grupo para evitar acumular tareas el mismo día?",opts:["Sí, hay un mecanismo formal","Nos coordinamos informalmente","No existe coordinación","No lo sé"]},
+        {id:"horas_calificar",label:"Horas semanales calificando",type:"single",required:true,q:"¿Cuántas horas a la semana dedica a revisar y calificar tareas fuera del horario de clase?",opts:["Menos de 2 horas","Entre 2 y 5 horas","Entre 5 y 10 horas","Más de 10 horas"]},
+      ]},
+      { parte:"Parte 4 · Rendimiento, apoyo y equidad", qs:[
+        {id:"entrega",label:"% entrega a tiempo",type:"single",required:true,q:"¿Qué porcentaje de sus alumnos entrega las tareas completas y a tiempo de forma regular?",opts:["Más del 90%","Entre 70% y 90%","Entre 50% y 70%","Menos del 50%"]},
+        {id:"diferencia",label:"Diferencia de rendimiento",type:"single",required:true,q:"¿Nota diferencia de rendimiento entre quienes hacen la tarea y quienes no?",opts:["Sí, muy notoria","Sí, pero influyen otros factores más importantes","No, el impacto es mínimo"]},
+        {id:"apoyo_familias",label:"Apoyo de las familias",type:"single",required:true,q:"¿Cómo describiría el nivel de apoyo de las familias en las tareas?",opts:["Adecuado (guían sin hacer el trabajo)","Excesivo (los padres terminan haciéndola)","Insuficiente (el alumno no recibe apoyo)"]},
+        {id:"equidad",label:"Impacto de falta de recursos",type:"single",required:true,q:"¿Con qué frecuencia la falta de recursos en casa (internet, dispositivo, materiales, espacio, acompañamiento) impide que sus estudiantes cumplan las tareas?",opts:["Muy frecuentemente","Frecuentemente","Ocasionalmente","Rara vez"]},
+      ]},
+      { parte:"Parte 5 · Inteligencia Artificial", intro:"El objetivo es diagnosticar, no fiscalizar. Sus respuestas orientarán la formación y los lineamientos institucionales.", qs:[
+        {id:"ia_deteccion",label:"Detección de uso de IA",type:"single",required:true,q:"¿Con qué frecuencia identifica tareas resueltas total o parcialmente con IA (ChatGPT, Gemini, etc.)?",opts:["Muy frecuentemente","Frecuentemente","Ocasionalmente","Nunca lo he detectado","No sabría identificarlo"]},
+        {id:"ia_evaluacion",label:"Efecto en la evaluación",type:"single",required:true,q:"¿Cómo afecta el uso de IA su capacidad para evaluar el aprendizaje real?",opts:["Dificulta mucho valorar lo aprendido","Lo dificulta un poco","Es neutral","Puede favorecer el aprendizaje si se orienta bien"]},
+        {id:"ia_rediseno",label:"Rediseño de tareas",type:"single",required:true,q:"¿Ha modificado el diseño de sus tareas para responder al uso de IA (proceso, en clase, orales)?",opts:["Sí, de forma sistemática","He hecho algunos ajustes","Aún no, pero lo considero","No"]},
+        {id:"ia_postura",label:"Postura frente a la IA",type:"likert",required:true,q:"Indique su grado de acuerdo:",scale:ACUERDO,statements:[
+          "La IA puede potenciar el aprendizaje si se enseña a usarla de forma crítica.",
+          "Necesito formación para integrar la IA en mis tareas y evaluaciones.",
+          "La institución debería tener un lineamiento claro sobre el uso de IA.",
+          "El uso no guiado de IA está afectando el desarrollo del pensamiento."
+        ]},
+      ]},
+      { parte:"Parte 6 · Política y sugerencias", qs:[
+        {id:"politica",label:"Acuerdo con política de tareas",type:"single",required:true,q:"¿Estaría de acuerdo con una política que regule los días o la cantidad de tareas (p. ej., fines de semana sin tareas)?",opts:["Totalmente de acuerdo","De acuerdo, con condiciones","En desacuerdo","Totalmente en desacuerdo"]},
+        {id:"desafios",label:"Desafíos al diseñar tareas",type:"open",q:"¿Qué desafíos principales encuentra hoy al diseñar o revisar las tareas?",placeholder:"Uso de IA, interés, tiempo de calificación, equidad…"},
+        {id:"recomendacion",label:"Recomendación para la política",type:"open",q:"Una recomendación concreta para la política institucional de tareas:",placeholder:"Escriba su recomendación…"},
+      ]},
+    ]
+  },
+
+  familias: {
+    title: "Encuesta a Familias",
+    sub: "Tareas escolares, bienestar y tecnología en casa",
+    accent: "familias",
+    sections: [
+      { parte:"Parte 1 · Información general", qs:[
+        {id:"jornada",label:"Jornada",type:"single",required:true,q:"¿En qué jornada estudia su hijo(a)?",opts:["Mañana","Tarde"]},
+        {id:"grado_grupo",label:"Grado y grupo",type:"text",required:true,q:"Grado y grupo que cursa su hijo(a)",placeholder:"Ej. 7º-2"},
+        {id:"nivel",label:"Nivel",type:"single",required:true,q:"Nivel educativo de su hijo(a)",opts:["Preescolar","Primaria (1º–3º)","Primaria (4º–5º)","Secundaria (6º–9º)","Media (10º–11º)"]},
+        {id:"hijos",label:"Hijos en la institución",type:"single",required:true,q:"¿Cuántos hijos(as) tiene estudiando en la institución?",opts:["1","2","3 o más"]},
+      ]},
+      { parte:"Parte 2 · Tiempo y dedicación", qs:[
+        {id:"tiempo_diario",label:"Tiempo diario de tareas",type:"single",required:true,q:"En promedio, ¿cuánto tiempo pasa su hijo(a) haciendo tareas cada día?",opts:["Menos de 30 minutos","Entre 30 minutos y 1 hora","Entre 1 y 2 horas","Más de 2 horas"]},
+        {id:"asignaturas",label:"Asignaturas con tarea por día",type:"single",required:true,q:"En un día típico, ¿de cuántas asignaturas suele traer tareas?",opts:["De 0 a 1","De 2 a 3","4 o más","No lo sé"]},
+        {id:"ayuda_frec",label:"Frecuencia de ayuda",type:"single",required:true,q:"¿Con qué frecuencia su hijo(a) necesita ayuda para completar las tareas?",opts:["Siempre","Frecuentemente","Rara vez","Nunca (las hace solo/a)"]},
+        {id:"participacion",label:"Tipo de participación",type:"single",required:true,q:"Cuando usted ayuda, ¿cómo describiría su participación?",opts:["Oriento, pero el trabajo lo hace mi hijo(a)","A veces termino haciéndola yo","No dispongo de tiempo o conocimiento para ayudar"]},
+      ]},
+      { parte:"Parte 3 · Bienestar e impacto", qs:[
+        {id:"emocional",label:"Estado emocional",type:"multi",required:true,q:"¿Cómo describiría el estado emocional de su hijo(a) al hacer las tareas?",help:"Puede marcar varias.",opts:["Motivado(a) / concentrado(a)","Tranquilo(a)","Estresado(a) / ansioso(a)","Frustrado(a) / enojado(a)","Muy cansado(a)"]},
+        {id:"tensiones",label:"Tensiones en el hogar",type:"single",required:true,q:"¿Con qué frecuencia las tareas generan tensiones o discusiones en el hogar?",opts:["Constantemente","A veces","Casi nunca / nunca"]},
+        {id:"interferencia",label:"Interferencia con descanso",type:"single",required:true,q:"¿La cantidad de tareas interfiere con el descanso, el juego o las actividades de su hijo(a)?",opts:["Sí, interfiere significativamente","Un poco, pero lo balanceamos","No, el tiempo es adecuado"]},
+        {id:"sueno",label:"Sueño / preocupación",type:"single",required:true,q:"¿Ha notado que su hijo(a) duerme menos o se preocupa por las tareas?",opts:["Con frecuencia","Rara vez","Nunca"]},
+      ]},
+      { parte:"Parte 4 · Condiciones en el hogar", qs:[
+        {id:"recursos",label:"Condiciones en el hogar",type:"multi",required:true,q:"En casa, su hijo(a) cuenta con:",help:"Marque todas las que apliquen.",opts:["Un espacio tranquilo para estudiar","Conexión a internet estable","Un dispositivo disponible (computador, tablet o celular)","Los materiales necesarios","Un adulto que pueda acompañar"]},
+      ]},
+      { parte:"Parte 5 · Tecnología e IA", qs:[
+        {id:"ia_uso",label:"Conocimiento de uso de IA",type:"single",required:true,q:"¿Sabe si su hijo(a) usa herramientas de IA (ChatGPT u otras) para las tareas?",opts:["Sí, con frecuencia","A veces","No","No sé qué es eso"]},
+        {id:"ia_percepcion",label:"Percepción del uso de IA",type:"single",required:true,q:"¿Cómo percibe ese uso?",opts:["Le ayuda a aprender y entender","Es un atajo para no pensar","Depende de cómo se use","Me preocupa"]},
+        {id:"ia_orientacion",label:"Interés en orientación",type:"single",required:true,q:"¿Le gustaría que la institución orientara a las familias sobre el uso responsable de la IA?",opts:["Sí","Tal vez","No"]},
+      ]},
+      { parte:"Parte 6 · Utilidad y volumen", qs:[
+        {id:"utilidad",label:"Percepción de utilidad",type:"likert",required:true,q:"Indique su grado de acuerdo:",scale:ACUERDO,statements:[
+          "Las tareas ayudan a reforzar el aprendizaje de mi hijo(a).",
+          "Conozco el propósito de las tareas que le asignan.",
+          "El volumen de tareas asignado es adecuado."
+        ]},
+        {id:"volumen",label:"Volumen de tareas",type:"single",required:true,q:"En su opinión, el volumen de tareas actualmente es:",opts:["Excesivo","Adecuado","Muy poco"]},
+      ]},
+      { parte:"Parte 7 · Comentarios", qs:[
+        {id:"comentario",label:"Sugerencia u observación",type:"open",q:"¿Tiene alguna sugerencia u observación para mejorar el manejo de las tareas?",placeholder:"Escriba aquí…"},
+      ]},
+    ]
+  },
+
+  estudiantes: {
+    title: "Encuesta a Estudiantes",
+    sub: "¿Cómo te afectan las tareas?",
+    accent: "estudiantes",
+    sections: [
+      { parte:"Parte 1 · Datos básicos", qs:[
+        {id:"jornada",label:"Jornada",type:"single",required:true,q:"¿En qué jornada estudias?",opts:["Mañana","Tarde"]},
+        {id:"grado_grupo",label:"Grado y grupo",type:"text",required:true,q:"¿En qué grado y grupo estás?",placeholder:"Ej. 9º-1"},
+        {id:"nivel",label:"Nivel",type:"single",required:true,q:"¿En qué nivel estás?",opts:["Primaria (3º–5º)","6º – 7º","8º – 9º","10º – 11º"]},
+      ]},
+      { parte:"Parte 2 · Tiempo y dedicación", qs:[
+        {id:"tiempo_diario",label:"Tiempo diario",type:"single",required:true,q:"En un día normal, ¿cuánto tiempo pasas haciendo tareas en casa?",opts:["Menos de 30 minutos","Entre 30 minutos y 1 hora","Entre 1 y 2 horas","Más de 2 horas"]},
+        {id:"materias",label:"Materias con tarea",type:"single",required:true,q:"En un día normal, ¿de cuántas materias traes tarea?",opts:["De 0 a 1","De 2 a 3","4 o más"]},
+        {id:"ayuda",label:"Necesidad de ayuda",type:"single",required:true,q:"¿Con qué frecuencia necesitas que un adulto te ayude a entender o terminar tus tareas?",opts:["Siempre","A veces","Casi nunca / nunca (las hago solo/a)"]},
+      ]},
+      { parte:"Parte 3 · Emociones y tiempo libre", qs:[
+        {id:"sentir",label:"Cómo te sientes",type:"multi",max:2,required:true,q:"¿Cómo te sientes la mayoría de las veces cuando haces la tarea?",help:"Puedes marcar hasta 2.",opts:["Tranquilo(a) y concentrado(a)","Aburrido(a)","Estresado(a) o presionado(a)","Frustrado(a) porque no le entiendo","Muy cansado(a) o con sueño"]},
+        {id:"tiempo_libre",label:"Sacrificio de tiempo libre",type:"single",required:true,q:"¿Has dejado de hacer cosas que te gustan (jugar, deporte, amigos) por terminar las tareas?",opts:["Sí, me pasa muy seguido","A veces me toca sacrificar mi tiempo libre","No, me alcanza el tiempo para todo"]},
+        {id:"dormir",label:"Dormir / preocupación",type:"single",required:true,q:"¿Te ha costado dormir o has dormido menos por preocuparte por las tareas?",opts:["Sí, muchas veces","Rara vez","Nunca"]},
+      ]},
+      { parte:"Parte 4 · Cuando haces tareas en casa", qs:[
+        {id:"recursos",label:"Condiciones en casa",type:"multi",required:true,q:"Para hacer tus tareas en casa, ¿con qué cuentas?",help:"Marca todas las que tengas.",opts:["Un lugar tranquilo para estudiar","Internet","Un computador o celular que pueda usar","Los materiales que necesito","Alguien que me pueda ayudar"]},
+      ]},
+      { parte:"Parte 5 · Tecnología e IA", intro:"Recuerda: esto es anónimo y no es una trampa. No hay respuestas buenas ni malas: contesta con sinceridad.", qs:[
+        {id:"ia_uso",label:"Uso de IA",type:"single",required:true,q:"¿Usas herramientas de IA (como ChatGPT) para tus tareas?",opts:["Sí, seguido","A veces","Casi nunca","No las uso"]},
+        {id:"ia_para",label:"Para qué usa IA",type:"single",required:true,q:"Cuando las usas, ¿para qué es MÁS común?",opts:["Para entender algo que no me quedó claro","Para que me explique cómo hacerlo","Para copiar la respuesta y entregar rápido","Para revisar o corregir lo que ya hice","No aplica, no las uso"]},
+        {id:"ia_aprende",label:"Aprendizaje con IA",type:"single",required:true,q:"¿Sientes que usar IA te ayuda a aprender de verdad?",opts:["Sí, aprendo más","A veces","No, solo entrego pero no aprendo","No aplica, no las uso"]},
+      ]},
+      { parte:"Parte 6 · ¿Qué tan útiles son?", qs:[
+        {id:"utilidad",label:"Las tareas ayudan",type:"single",required:true,q:"¿Sientes que las tareas te ayudan a entender mejor lo que viste en clase?",opts:["Sí, me ayudan mucho","Solo algunas me sirven","No, siento que solo es copiar o repetir"]},
+        {id:"pesado",label:"Tarea más pesada",type:"single",required:true,q:"¿Qué tipo de tarea se te hace más pesado o difícil?",opts:["Las muy largas (cuestionarios, resúmenes)","Las maquetas o proyectos con materiales","Estudiar para exámenes","No me parecen difíciles"]},
+      ]},
+      { parte:"Parte 7 · Tu opinión", qs:[
+        {id:"cambio",label:"Qué cambiaría",type:"open",q:"Si pudieras cambiar algo sobre las tareas escolares, ¿qué sería?",placeholder:"Escribe tu idea…"},
+      ]},
+    ]
+  }
+};
+
+/* ============================================================
+   Estado y render
+   ============================================================ */
+const app = document.getElementById("app");
+let state = { role:null, step:0, answers:{} };
+
+const ICONS = {
+  arrow:'<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  back:'<svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>',
+  check:'<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>',
+  send:'<svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>',
+  teach:'<svg viewBox="0 0 24 24"><path d="M4 5h16v11H4z"/><path d="M8 20h8M12 16v4"/></svg>',
+  family:'<svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M2.5 20c0-3 2.5-5 5.5-5s5.5 2 5.5 5M14 20c0-2.4 1.6-4 3.5-4s3.5 1.6 3.5 4"/></svg>',
+  student:'<svg viewBox="0 0 24 24"><path d="M12 4 2 9l10 5 10-5-10-5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg>'
+};
+
+function renderLanding(){
+  document.body.removeAttribute("data-role");
+  app.innerHTML = `
+    <section class="hero">
+      <p class="eyebrow">Consulta institucional · 2026</p>
+      <h1>Hablemos de las <em>tareas escolares</em>.</h1>
+      <p class="lead">Estamos revisando cómo funcionan las tareas en la institución: cuánto tiempo toman, cómo se viven en casa y qué papel juega la tecnología. Tu respuesta ayuda a construir una mejor política de tareas.</p>
+      <span class="chip"><span class="dot"></span> Anónima · toma 3–5 minutos</span>
+
+      <div class="roles">
+        ${roleCard("docentes","01","Soy docente","Frecuencia, propósito y carga de las tareas que asignas.",ICONS.teach)}
+        ${roleCard("familias","02","Soy familia","Cómo se viven las tareas en casa y el bienestar de tu hijo(a).",ICONS.family)}
+        ${roleCard("estudiantes","03","Soy estudiante","Tu tiempo, tus emociones y cómo usas la tecnología.",ICONS.student)}
+      </div>
+
+      <div class="privacy"><b>Tus respuestas son anónimas.</b> La información se usa únicamente con fines de mejoramiento institucional y se trata conforme a la Ley 1581 de 2012 (Habeas Data). Ninguna respuesta se asocia a una persona en particular.</div>
+      <p class="foot">IED Los Rosales · Proceso de Gestión Académica</p>
+    </section>`;
+  app.querySelectorAll(".role").forEach(el=>el.addEventListener("click",()=>start(el.dataset.r)));
+}
+function roleCard(r,num,title,desc,icon){
+  return `<button class="role" data-r="${r}">
+    <div class="num">${num}</div>
+    <div class="ic">${icon}</div>
+    <h3>${title}</h3><p>${desc}</p>
+    <span class="go">Comenzar ${ICONS.arrow}</span>
+  </button>`;
+}
+
+function start(role){
+  state = { role, step:0, answers:{} };
+  document.body.setAttribute("data-role", role);
+  location.hash = role;
+  renderStep();
+  window.scrollTo({top:0});
+}
+
+function renderStep(){
+  const s = SURVEYS[state.role];
+  const total = s.sections.length;
+  const sec = s.sections[state.step];
+  const isLast = state.step === total - 1;
+
+  const segs = s.sections.map((_,i)=>{
+    const cls = i<state.step ? "done" : (i===state.step ? "active" : "");
+    return `<div class="seg ${cls}"><span class="fill"></span></div>`;
+  }).join("");
+
+  app.innerHTML = `
+    <div class="form-head">
+      <button class="back">${ICONS.back} Inicio</button>
+      <span class="role-tag">${state.role}</span>
+    </div>
+    <h1 class="form-title">${s.title}</h1>
+    <p class="form-sub">${s.sub}</p>
+    <div class="progress">${segs}</div>
+    <div class="step-label">Paso <b>${state.step+1}</b> de ${total} — ${sec.parte.replace(/^Parte \d+ · /,"")}</div>
+    <div class="step" id="step">
+      ${sec.intro?`<div class="privacy" style="border-left-color:var(--accent);margin-top:0;margin-bottom:16px">${sec.intro}</div>`:""}
+      ${sec.qs.map(renderQ).join("")}
+    </div>
+    <div class="errline" id="errline">Por favor responde las preguntas marcadas antes de continuar.</div>
+    <div class="nav">
+      ${state.step>0?`<button class="btn prev">${ICONS.back} Anterior</button>`:""}
+      <button class="btn next" id="next">
+        ${isLast?`Enviar respuestas ${ICONS.send}`:`Siguiente ${ICONS.arrow}`}
+      </button>
+    </div>`;
+
+  app.querySelector(".back").addEventListener("click",()=>{ if(confirm("¿Volver al inicio? Se perderán las respuestas de esta encuesta.")){ location.hash=""; renderLanding(); document.body.removeAttribute("data-role"); }});
+  const prev = app.querySelector(".prev");
+  if(prev) prev.addEventListener("click",()=>{ state.step--; renderStep(); window.scrollTo({top:0}); });
+  app.querySelector("#next").addEventListener("click",()=> isLast ? submit() : nextStep());
+  wireInputs(sec);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function renderQ(q){
+  const a = state.answers[q.id];
+  let body="";
+  if(q.type==="single"||q.type==="multi"){
+    const single = q.type==="single";
+    body = `<div class="opts" data-q="${q.id}" data-type="${q.type}" ${q.max?`data-max="${q.max}"`:""}>`+
+      q.opts.map(o=>{
+        const on = single ? a===o : Array.isArray(a)&&a.includes(o);
+        return `<label class="opt ${on?"on":""}" ${single?"data-single":""} data-v="${esc(o)}">
+          <span class="mark">${ICONS.check}</span><span class="txt">${o}</span>
+        </label>`;
+      }).join("")+`</div>`;
+  } else if(q.type==="text"){
+    body = `<input type="text" data-q="${q.id}" placeholder="${q.placeholder||""}" value="${a?esc(a):""}" />`;
+  } else if(q.type==="open"){
+    body = `<textarea rows="3" data-q="${q.id}" placeholder="${q.placeholder||""}">${a?esc(a):""}</textarea>`;
+  } else if(q.type==="likert"){
+    const head = `<tr><th class="first"></th>${q.scale.map(x=>`<th>${x}</th>`).join("")}</tr>`;
+    const rows = q.statements.map((st,i)=>{
+      const sel = a&&a[i];
+      const cells = q.scale.map(sc=>`<td class="cell"><span class="lk ${sel===sc?"on":""}" data-q="${q.id}" data-i="${i}" data-v="${esc(sc)}"></span></td>`).join("");
+      return `<tr><td class="stmt">${st}</td>${cells}</tr>`;
+    }).join("");
+    const mini = q.statements.map((st,i)=>{
+      const sel = a&&a[i];
+      return `<div class="lm-stmt">${st}</div><div class="lm-scale">`+
+        q.scale.map(sc=>`<label class="opt ${sel===sc?"on":""}" data-single data-lk data-q="${q.id}" data-i="${i}" data-v="${esc(sc)}"><span class="mark">${ICONS.check}</span><span class="txt">${sc}</span></label>`).join("")+
+        `</div>`;
+    }).join("");
+    body = `<div class="likert"><table>${head}${rows}</table></div><div class="likert-mini">${mini}</div>`;
+  }
+  const req = q.required?'<span class="req"> *</span>':"";
+  return `<div class="q" data-qid="${q.id}">
+    <p class="qh">${q.q}${req}</p>
+    ${q.help?`<p class="help">${q.help}</p>`:""}
+    ${body}
+  </div>`;
+}
+
+function wireInputs(sec){
+  // single / multi
+  app.querySelectorAll(".opts").forEach(box=>{
+    const qid = box.dataset.q, type = box.dataset.type, max = +box.dataset.max||0;
+    box.querySelectorAll(".opt").forEach(opt=>{
+      opt.addEventListener("click",()=>{
+        const v = opt.dataset.v;
+        if(type==="single"){
+          state.answers[qid]=v;
+          box.querySelectorAll(".opt").forEach(o=>o.classList.toggle("on",o===opt));
+        } else {
+          let arr = Array.isArray(state.answers[qid])?state.answers[qid].slice():[];
+          if(arr.includes(v)) arr=arr.filter(x=>x!==v);
+          else { if(max && arr.length>=max){ flash(opt); return; } arr.push(v); }
+          state.answers[qid]=arr;
+          opt.classList.toggle("on", arr.includes(v));
+        }
+        clearErr(qid);
+      });
+    });
+  });
+  // text / open
+  app.querySelectorAll("input[type=text],textarea").forEach(inp=>{
+    inp.addEventListener("input",()=>{ state.answers[inp.dataset.q]=inp.value.trim(); clearErr(inp.dataset.q); });
+  });
+  // likert (desktop dots + mobile options)
+  app.querySelectorAll(".lk, .opt[data-lk]").forEach(el=>{
+    el.addEventListener("click",()=>{
+      const qid=el.dataset.q, i=+el.dataset.i, v=el.dataset.v;
+      const a = state.answers[qid] && typeof state.answers[qid]==="object" ? state.answers[qid] : {};
+      a[i]=v; state.answers[qid]=a;
+      // refresh visuals for this statement row
+      app.querySelectorAll(`.lk[data-q="${qid}"][data-i="${i}"]`).forEach(d=>d.classList.toggle("on",d.dataset.v===v));
+      app.querySelectorAll(`.opt[data-lk][data-q="${qid}"][data-i="${i}"]`).forEach(d=>d.classList.toggle("on",d.dataset.v===v));
+      clearErr(qid);
+    });
+  });
+}
+
+function flash(el){ el.style.transition="none"; el.style.borderColor="var(--danger)"; setTimeout(()=>{el.style.transition="";el.style.borderColor="";},280); }
+function clearErr(qid){ const q=app.querySelector(`.q[data-qid="${qid}"]`); if(q)q.classList.remove("err"); }
+function esc(s){ return String(s).replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
+
+function validate(sec){
+  let ok=true, first=null;
+  sec.qs.forEach(q=>{
+    if(!q.required) return;
+    const a=state.answers[q.id];
+    let filled;
+    if(q.type==="multi") filled = Array.isArray(a)&&a.length>0;
+    else if(q.type==="likert") filled = a && Object.keys(a).length===q.statements.length;
+    else filled = a!=null && String(a).trim()!=="";
+    if(!filled){ ok=false; const el=app.querySelector(`.q[data-qid="${q.id}"]`); if(el){el.classList.add("err"); if(!first)first=el;} }
+  });
+  if(!ok){ const e=app.querySelector("#errline"); e.classList.add("show"); if(first)first.scrollIntoView({behavior:"smooth",block:"center"}); }
+  return ok;
+}
+function nextStep(){
+  const sec = SURVEYS[state.role].sections[state.step];
+  app.querySelector("#errline").classList.remove("show");
+  if(!validate(sec)) return;
+  state.step++; renderStep();
+}
+
+/* ---------- construir payload plano y enviar ---------- */
+function buildPayload(){
+  const s = SURVEYS[state.role];
+  const fields=[];
+  s.sections.forEach(sec=>sec.qs.forEach(q=>{
+    const a=state.answers[q.id];
+    if(q.type==="multi") fields.push({label:q.label, value:Array.isArray(a)?a.join("; "):""});
+    else if(q.type==="likert") q.statements.forEach((st,i)=>fields.push({label:`${q.label}: ${st}`, value:(a&&a[i])||""}));
+    else fields.push({label:q.label, value:a!=null?String(a):""});
+  }));
+  return { tipo: state.role, fields };
+}
+
+async function submit(){
+  const sec = SURVEYS[state.role].sections[state.step];
+  app.querySelector("#errline").classList.remove("show");
+  if(!validate(sec)) return;
+  const btn = app.querySelector("#next");
+  btn.disabled=true; btn.innerHTML=`Enviando… `;
+
+  if(!CONFIG.SCRIPT_URL || CONFIG.SCRIPT_URL.startsWith("PEGA")){
+    // Modo demostración (sin backend configurado)
+    console.warn("SCRIPT_URL no configurada. Respuesta (demo):", buildPayload());
+    setTimeout(renderDone, 500); return;
+  }
+  try{
+    const res = await fetch(CONFIG.SCRIPT_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify(buildPayload())
+    });
+    let ok = res.ok;
+    try{ const j = await res.json(); ok = j.result==="success"; }catch(_){}
+    if(ok) renderDone();
+    else throw new Error("El servidor no confirmó el registro.");
+  }catch(err){
+    console.error(err);
+    const e=app.querySelector("#errline");
+    e.textContent="No pudimos enviar tus respuestas. Revisa tu conexión e inténtalo de nuevo.";
+    e.classList.add("show");
+    btn.disabled=false; btn.innerHTML=`Reintentar ${ICONS.send}`;
+  }
+}
+
+function renderDone(){
+  const voice = state.role==="estudiantes"
+    ? "¡Gracias por responder! Tu opinión nos ayuda a mejorar las tareas."
+    : state.role==="familias"
+      ? "Gracias por su tiempo. Su mirada es clave para el bienestar de nuestros estudiantes."
+      : "Gracias por su participación y compromiso con la excelencia educativa.";
+  app.innerHTML = `
+    <div class="done">
+      <div class="seal">${ICONS.check}</div>
+      <h2>Respuesta registrada</h2>
+      <p>${voice}</p>
+      <button class="btn next" style="max-width:280px;margin:0 auto" id="again">Enviar otra respuesta ${ICONS.arrow}</button>
+    </div>`;
+  app.querySelector("#again").addEventListener("click",()=>{ location.hash=""; document.body.removeAttribute("data-role"); renderLanding(); });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ---------- routing por hash (enlaces directos) ---------- */
+function route(){
+  const h=(location.hash||"").replace("#","");
+  if(SURVEYS[h]) start(h); else renderLanding();
+}
+window.addEventListener("hashchange",()=>{ const h=(location.hash||"").replace("#",""); if(!SURVEYS[h]) renderLanding(); });
+route();
+</script>
+</body>
+</html>
