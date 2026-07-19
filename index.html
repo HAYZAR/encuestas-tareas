@@ -537,15 +537,16 @@ async function submit(){
     setTimeout(renderDone, 500); return;
   }
   try{
-    const res = await fetch(CONFIG.SCRIPT_URL, {
+    // Apps Script no envía cabeceras CORS al responder, así que usamos "no-cors":
+    // el navegador manda el POST (Apps Script lo guarda) pero no lee la respuesta.
+    // La petición es "simple" (text/plain) para no disparar preflight.
+    await fetch(CONFIG.SCRIPT_URL, {
       method:"POST",
+      mode:"no-cors",
       headers:{ "Content-Type":"text/plain;charset=utf-8" },
       body: JSON.stringify(buildPayload())
     });
-    let ok = res.ok;
-    try{ const j = await res.json(); ok = j.result==="success"; }catch(_){}
-    if(ok) renderDone();
-    else throw new Error("El servidor no confirmó el registro.");
+    renderDone();
   }catch(err){
     console.error(err);
     const e=app.querySelector("#errline");
